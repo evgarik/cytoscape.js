@@ -289,6 +289,8 @@ const styfn = {};
     { name: 'line-color', type: t.color },
     { name: 'line-fill', type: t.fill },
     { name: 'line-cap', type: t.lineCap },
+    { name: 'line-outline', type: t.size },
+    { name: 'line-outline-color', type: t.color },
     { name: 'line-dash-pattern', type: t.numbers },
     { name: 'line-dash-offset', type: t.number },
     { name: 'line-gradient-stop-colors', type: t.colors },

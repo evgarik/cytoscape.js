@@ -22,10 +22,14 @@ CRp.drawEdge = function( context, edge, shiftToOriginWithBb, drawLabel = true, s
     context.translate( -bb.x1, -bb.y1 );
   }
 
+  let overlayOpacity = edge.pstyle('overlay-opacity').value;
+  let overlayColor = edge.pstyle('overlay-color').value;
   let opacity = shouldDrawOpacity ? edge.pstyle('opacity').value : 1;
   let lineStyle = edge.pstyle('line-style').value;
   let edgeWidth = edge.pstyle('width').pfValue;
   let lineCap = edge.pstyle('line-cap').value;
+  let lineOutline = edge.pstyle('line-outline').value;
+  let lineOutlineColor = edge.pstyle('line-outline-color').value;
 
   let drawLine = ( strokeOpacity = opacity ) => {
     context.lineWidth = edgeWidth;
@@ -42,10 +46,38 @@ CRp.drawEdge = function( context, edge, shiftToOriginWithBb, drawLabel = true, s
     context.lineCap = 'butt'; // reset for other drawing functions
   };
 
-  let drawOverlay = () => {
-    if( !shouldDrawOverlay ){ return; }
+  let drawOverlay = ( strokeOpacity = overlayOpacity ) => {
+    context.lineWidth = overlayWidth;
 
-    r.drawEdgeOverlay( context, edge );
+    if( rs.edgeType === 'self' && !usePaths ){
+      context.lineCap = 'butt';
+    } else {
+      context.lineCap = 'round';
+    }
+
+    r.colorStrokeStyle( context, overlayColor[0], overlayColor[1], overlayColor[2], strokeOpacity );
+
+    r.drawEdgePath(
+      edge,
+      context,
+      rs.allpts,
+      'solid'
+    );
+  };
+
+  let drawLineOutline = ( strokeOpacity = opacity ) => {
+    context.lineWidth = edgeWidth+lineOutline;
+    context.lineCap = lineCap;
+
+    r.colorStrokeStyle( context, lineOutlineColor[0], lineOutlineColor[1], lineOutlineColor[2], strokeOpacity );
+    r.drawEdgePath(
+      edge,
+      context,
+      rs.allpts,
+      lineStyle
+    );
+
+    context.lineCap = 'butt'; // reset for other drawing functions
   };
 
   let drawArrows = ( arrowOpacity = opacity ) => {
@@ -74,6 +106,7 @@ CRp.drawEdge = function( context, edge, shiftToOriginWithBb, drawLabel = true, s
     context.translate( -gx, -gy );
   }
 
+  drawLineOutline();
   drawLine();
   drawArrows();
   drawOverlay();
