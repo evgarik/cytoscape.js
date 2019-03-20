@@ -1,13 +1,13 @@
 {
   "build/cytoscape.umd.js": {
-    "bundled": 897790,
-    "minified": 332573,
-    "gzipped": 103470
+    "bundled": 898925,
+    "minified": 333142,
+    "gzipped": 103542
   },
   "build/cytoscape.cjs.js": {
-    "bundled": 827112,
-    "minified": 349788,
-    "gzipped": 105510
+    "bundled": 2481,
+    "minified": 787,
+    "gzipped": 363
   },
   "build/cytoscape.esm.js": {
     "bundled": 826939,

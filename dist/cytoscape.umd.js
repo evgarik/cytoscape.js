@@ -16593,6 +16593,12 @@
       name: 'line-cap',
       type: t.lineCap
     }, {
+      name: 'line-outline',
+      type: t.size
+    }, {
+      name: 'line-outline-color',
+      type: t.color
+    }, {
       name: 'line-dash-pattern',
       type: t.numbers
     }, {
@@ -28339,7 +28345,6 @@
 
   CRp$2.drawEdge = function (context, edge, shiftToOriginWithBb) {
     var drawLabel = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
-    var shouldDrawOverlay = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
     var shouldDrawOpacity = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
     var r = this;
     var rs = edge._private.rscratch;
@@ -28361,10 +28366,14 @@
       context.translate(-bb.x1, -bb.y1);
     }
 
+    var overlayOpacity = edge.pstyle('overlay-opacity').value;
+    var overlayColor = edge.pstyle('overlay-color').value;
     var opacity = shouldDrawOpacity ? edge.pstyle('opacity').value : 1;
     var lineStyle = edge.pstyle('line-style').value;
     var edgeWidth = edge.pstyle('width').pfValue;
     var lineCap = edge.pstyle('line-cap').value;
+    var lineOutline = edge.pstyle('line-outline').value;
+    var lineOutlineColor = edge.pstyle('line-outline-color').value;
 
     var drawLine = function drawLine() {
       var strokeOpacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : opacity;
@@ -28376,11 +28385,26 @@
     };
 
     var drawOverlay = function drawOverlay() {
-      if (!shouldDrawOverlay) {
-        return;
+      var strokeOpacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : overlayOpacity;
+      context.lineWidth = overlayWidth;
+
+      if (rs.edgeType === 'self' && !usePaths) {
+        context.lineCap = 'butt';
+      } else {
+        context.lineCap = 'round';
       }
 
-      r.drawEdgeOverlay(context, edge);
+      r.colorStrokeStyle(context, overlayColor[0], overlayColor[1], overlayColor[2], strokeOpacity);
+      r.drawEdgePath(edge, context, rs.allpts, 'solid');
+    };
+
+    var drawLineOutline = function drawLineOutline() {
+      var strokeOpacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : opacity;
+      context.lineWidth = edgeWidth + lineOutline;
+      context.lineCap = lineCap;
+      r.colorStrokeStyle(context, lineOutlineColor[0], lineOutlineColor[1], lineOutlineColor[2], strokeOpacity);
+      r.drawEdgePath(edge, context, rs.allpts, lineStyle);
+      context.lineCap = 'butt'; // reset for other drawing functions
     };
 
     var drawArrows = function drawArrows() {
@@ -28406,6 +28430,7 @@
       context.translate(-gx, -gy);
     }
 
+    drawLineOutline();
     drawLine();
     drawArrows();
     drawOverlay();
@@ -31203,7 +31228,7 @@
     return style$$1;
   };
 
-  var version = "3.5.0";
+  var version = "snapshot";
 
   var cytoscape = function cytoscape(options) {
     // if no options specified, use default
