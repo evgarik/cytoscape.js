@@ -87,19 +87,6 @@ const configs = [
       license(licenseHeaderOptions),
       !FILE ? sizeSnapshot({ matchSnapshot }) : {}
     ]
-  },
-
-  {
-    input,
-    output: { file: 'build/cytoscape.esm.js', format: 'es' },
-    external: isExternal,
-    plugins: [
-      nodeResolve(),
-      BABEL ? babel(getBabelOptions()) : {},
-      replace(envVariables),
-      license(licenseHeaderOptions),
-      !FILE ? sizeSnapshot({ matchSnapshot }) : {}
-    ]
   }
 ];
 

@@ -618,6 +618,8 @@ styfn.getDefaultProperties = function(){
     'line-color': '#999',
     'line-fill': 'solid',
     'line-cap': 'butt',
+    'line-outline':0,
+    'line-outline-color':'#000',
     'line-gradient-stop-colors': '#999',
     'line-gradient-stop-positions': '0%',
     'control-point-step-size': 40,

@@ -80,6 +80,7 @@ CRp.drawEdge = function( context, edge, shiftToOriginWithBb, drawLabel = true, s
     context.lineCap = 'butt'; // reset for other drawing functions
   };
 
+
   let drawArrows = ( arrowOpacity = opacity ) => {
     r.drawArrowheads( context, edge, arrowOpacity );
   };
